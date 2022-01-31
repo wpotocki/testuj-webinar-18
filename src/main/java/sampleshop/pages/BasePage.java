@@ -18,7 +18,7 @@ public class BasePage {
     // mogą to być operacje na typowych elementach (input, button)
     // wspólne operacje wait
 
-    private void buttonClick(WebElement buttonElement) {
+    protected void buttonClick(WebElement buttonElement) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.elementToBeClickable(buttonElement));
 
