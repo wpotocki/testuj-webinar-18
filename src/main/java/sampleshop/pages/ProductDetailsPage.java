@@ -25,6 +25,8 @@ public class ProductDetailsPage extends BasePage {
     private List<WebElement> colors;
 
     public ProductDetailsPage selectSize(String sizeToSelect) {
+        LOGGER.debug("Wybieram rozmiar w trybie DEBUG " + sizeToSelect);
+        LOGGER.info("Wybieram rozmiar " + sizeToSelect);
         Select select = new Select(sizeSelect);
         select.selectByVisibleText(sizeToSelect);
 
