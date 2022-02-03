@@ -7,7 +7,7 @@
             <class name="sampleshop.pages.HomePageTests">
                 <methods>
                     <include name="checkCategoriesInMenu"/>
-                    <exclude name="testWillFail"/>
+                    <include name="testWillFail"/>
                 </methods>
             </class>
             <class name="sampleshop.pages.ProductDetailsTests">

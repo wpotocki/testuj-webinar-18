@@ -1,8 +1,10 @@
 package sampleshop.pages;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -14,14 +16,18 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 
 public class BaseTest {
-    WebDriver driver;
+    ChromeDriver driver;
 
     @BeforeClass
     public void setUp() {
         // wyłączenie logowania zbyt dużej informacji przy uruchamianiu drivera
         System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
-        System.setProperty("webdriver.chrome.driver", "/Users/wojciechpotocki/Documents/szkolenia/testuj/bootcamp/driver/chromedriver");
-        driver = new ChromeDriver();
+        //System.setProperty("webdriver.chrome.driver", "/Users/wojciechpotocki/Documents/szkolenia/testuj/bootcamp/driver/chromedriver");
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions chromeOptions = new ChromeOptions();
+        // uruchamianie testów bez włączania automatycznie przeglądarki
+//        chromeOptions.addArguments("--headless");
+        driver = new ChromeDriver(chromeOptions);
         // maksymalizacja okna
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
