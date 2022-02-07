@@ -1,6 +1,8 @@
 package sampleshop.pages;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.qameta.allure.Allure;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
@@ -12,8 +14,15 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import sampleshop.utils.ScreenshotUtil;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+
+import static io.qameta.allure.Allure.step;
 
 public class BaseTest {
     ChromeDriver driver;
@@ -35,19 +44,35 @@ public class BaseTest {
     }
 
     @AfterMethod
-    public void testTearDown(ITestResult result) {
+    public void testTearDown(ITestResult result) throws IOException {
+        step("Zakończenie metody testowej");
         if (!result.isSuccess()) {
             System.out.println("Metoda testowa " + result.getMethod().getMethodName() + " zakończona niepowodzeniem");
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_hh-mm");
             String readableTimestamp = formatter.format(result.getEndMillis());
+            String fileName = result.getMethod().getMethodName() + "_" + readableTimestamp + ".png";
 
-            String screenshotPath = "./target/artifacts/screenshots/"+ result.getMethod().getMethodName() + "_" + readableTimestamp + ".png";
+            String screenshotPath = "./target/artifacts/screenshots/" + fileName;
             ScreenshotUtil.takeScreenshot(driver, screenshotPath);
+
+            // Dodanie załącznika do raportu
+            InputStream screenshotInputStream = Files.newInputStream(Paths.get(screenshotPath));
+            Allure.addAttachment(fileName, screenshotInputStream);
         }
     }
 
     @AfterClass
     public void tearDown() {
         driver.quit();
+    }
+
+    @AfterTest
+    public void finishTest() throws IOException {
+        // na zakończenie testów kopiujemy definicję środowiska do folderu z rezultatami dla Allure
+        String projectPath = System.getProperty("user.dir");
+        FileUtils.copyFile(new File(projectPath + "/src/test/resources/environment.properties"),
+                new File(projectPath + "/target/allure-results/environment.properties"));
+        FileUtils.copyFile(new File(projectPath + "/src/test/resources/categories.json"),
+                new File(projectPath + "/target/allure-results/categories.json"));
     }
 }

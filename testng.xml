@@ -13,6 +13,7 @@
             <class name="sampleshop.pages.ProductDetailsTests">
                 <methods>
                     <include name="orderElement"/>
+                    <include name="thisMethodWillFail"/>
                 </methods>
             </class>
         </classes>
