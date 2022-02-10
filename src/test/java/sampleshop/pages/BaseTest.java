@@ -12,6 +12,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
+import sampleshop.PropertiesConfig;
 import sampleshop.utils.ScreenshotUtil;
 
 import java.io.File;
@@ -24,11 +25,17 @@ import java.time.Duration;
 
 import static io.qameta.allure.Allure.step;
 
-public class BaseTest {
+/*
+ZADANIE DOMOWE
+
+Wyciągnąć do configuration.properties ścieżkę, gdzie mają być zapisywane zrzuty ekranu
+ */
+public class BaseTest extends PropertiesConfig {
     ChromeDriver driver;
 
     @BeforeClass
-    public void setUp() {
+    public void setUp() throws IOException {
+        loadProperties();
         // wyłączenie logowania zbyt dużej informacji przy uruchamianiu drivera
         System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
         //System.setProperty("webdriver.chrome.driver", "/Users/wojciechpotocki/Documents/szkolenia/testuj/bootcamp/driver/chromedriver");
@@ -40,7 +47,9 @@ public class BaseTest {
         // maksymalizacja okna
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.get("http://sampleshop.inqa.pl/");
+        driver.get(properties.getProperty("url"));
+
+        System.out.println(properties.getProperty("email"));
     }
 
     @AfterMethod
